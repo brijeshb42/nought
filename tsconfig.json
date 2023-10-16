@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "composite": true,
+    "paths": {
+      "@nought/*": ["./packages/*/src"]
+    },
+    "jsx": "react-jsx",
+    "lib": ["ES6", "DOM", "ESNext.Disposable"],
+    "module": "ES6",
+    "moduleResolution": "Node",
+    "strict": true,
+    "target": "ES2022",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "typeRoots": ["node_modules/@types", "typings"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "preserveWatchOutput": true
+  }
+}

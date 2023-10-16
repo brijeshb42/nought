@@ -1,0 +1,5 @@
+{
+  "main": "../dist/processors/preprocessor.js",
+  "module": "../dist/processors/preprocessor.mjs",
+  "types": "../types/processors/preprocessor.d.ts"
+}

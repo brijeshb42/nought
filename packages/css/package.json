@@ -1,0 +1,62 @@
+{
+  "name": "@nought/css",
+  "version": "0.0.1-alpha.0",
+  "main": "dist/index.js",
+  "module": "dist/preprocessor",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "bun run build:release && bun run build:types",
+    "build:types": "tsc --emitDeclarationOnly --outDir types -p . && cp vanilla-extract.d.ts ./types",
+    "build:release": "tsup --config tsup.config.js",
+    "build:watch": "tsup --config tsup.config.js --watch"
+  },
+  "dependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/types": "^7.23.0",
+    "@emotion/css": "^11.11.2",
+    "@linaria/tags": "^5.0.2",
+    "@linaria/utils": "^5.0.2",
+    "cssesc": "^3.0.0",
+    "lodash.get": "^4.4.2",
+    "lodash.mergewith": "^4.6.2",
+    "stylis": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.2",
+    "@types/cssesc": "^3.0.0",
+    "@types/lodash.get": "^4.4.7",
+    "@types/lodash.mergewith": "^4.6.7",
+    "@types/stylis": "^4.2.1",
+    "csstype": "^3.1.2"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "module": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./preprocessor": {
+      "module": "./dist/processors/preprocessor.mjs",
+      "default": "./dist/processors/preprocessor.js",
+      "types": "./types/processors/preprocessor.d.ts"
+    }
+  },
+  "linaria": {
+    "tags": {
+      "createVar": "./exports/createVar.js",
+      "fallbackVar": "./exports/fallbackVar.js",
+      "style": "./exports/style.js",
+      "styleVariants": "./exports/styleVariants.js",
+      "createThemeContract": "./exports/createThemeContract.js",
+      "createTheme": "./exports/createTheme.js",
+      "createGlobalThemeContract": "./exports/createGlobalThemeContract.js",
+      "assignVars": "./exports/assignVars.js",
+      "fontFace": "./exports/fontFace.js",
+      "keyframes": "./exports/keyframes.js",
+      "globalKeyframes": "./exports/keyframes.js",
+      "createContainer": "./exports/createContainer.js",
+      "layer": "./exports/layer.js",
+      "globalLayer": "./exports/layer.js"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {},
+    "rootDir": "./",
+    "target": "ES2015"
+  },
+  "include": ["processors/**/*", "*.ts"]
+}

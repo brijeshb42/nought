@@ -1,0 +1,16 @@
+{
+  "name": "@app/vite",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build:app": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@nought/css": "workspace:*"
+  },
+  "devDependencies": {
+    "@nought/vite": "workspace:*",
+    "vite": "^4.4.11"
+  }
+}

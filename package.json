@@ -1,0 +1,13 @@
+{
+  "name": "workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "devDependencies": {
+    "tsup": "^7.2.0",
+    "turbo": "^1.10.15",
+    "typescript": "^5.2.2"
+  }
+}

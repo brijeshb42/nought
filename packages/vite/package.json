@@ -1,0 +1,14 @@
+{
+  "name": "@nought/vite",
+  "scripts": {
+    "build": "tsup --config ../../tsup.config.js",
+    "build:watch": "tsup --config ../../tsup.config.js --watch"
+  },
+  "dependencies": {
+    "@linaria/vite": "^5.0.3",
+    "@nought/css": "workspace:*"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts"
+}
