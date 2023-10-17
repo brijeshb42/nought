@@ -1,18 +1,11 @@
-import { parseSync } from '@babel/core';
-import {
-  type ObjectExpression,
-  isObjectExpression,
-  type ArrayExpression,
-  isArrayExpression,
-} from '@babel/types';
+import { type ObjectExpression, type ArrayExpression } from '@babel/types';
 import {
   Expression,
   Params,
   TailProcessorParams,
-  ValueCache,
   validateParams,
+  IOptions as ILinariaOptions,
 } from '@linaria/tags';
-import { Rules, Replacements } from '@linaria/utils';
 import { type Walkable } from '../walkObject';
 import { BaseProcessor } from './utils/BaseProcessor';
 import {
@@ -21,8 +14,12 @@ import {
   valueToLiteral,
 } from './utils/style';
 
+type IOptions = ILinariaOptions & {
+  globalThemeContractPrefix?: string;
+};
+
 export class CreateThemeContractProcessor extends BaseProcessor {
-  isGlobal = false;
+  isGlobal = this.tagSource.imported === 'createGlobalThemeContract';
   expression: ObjectExpression | ArrayExpression | null = null;
   evaluatedValue: Walkable | null = null;
 
@@ -51,53 +48,43 @@ export class CreateThemeContractProcessor extends BaseProcessor {
     return this.astService.objectExpression([]);
   }
 
-  build(values: ValueCache) {
-    const cssText = '/* */';
-    const rules: Rules = {
-      [this.asSelector]: {
-        cssText,
-        className: this.className,
-        displayName: this.displayName,
-        start: this.location?.start,
-      },
-    };
-    const replacement: Replacements = [
-      {
-        length: cssText.length,
-        original: {
-          start: {
-            column: this.location?.start.column ?? 0,
-            line: this.location?.start.line ?? 0,
-          },
-          end: {
-            column: this.location?.end.column ?? 0,
-            line: this.location?.end.line ?? 0,
-          },
-        },
-      },
-    ];
-    this.artifacts.push(['css', [rules, replacement]]);
-  }
-
   doEvaltimeReplacement() {
     if (!this.expression) {
       this.replacer(this.astService.objectExpression([]), true);
       return;
     }
+    const [, mapFnParam] = this.callParams;
+    let mapFn: (value: string | null, path: Array<string>) => string;
+
+    try {
+      mapFn = this.isGlobal && mapFnParam ? eval(mapFnParam.source) : null;
+    } catch (ex) {
+      throw mapFnParam.buildCodeFrameError(
+        "The mapping function should be a pure arrow function. It should only use the arguments it is passed because when it actually runs, it won't have the same context as where it was authored."
+      );
+    }
+
+    const { globalThemeContractPrefix = '' } = this.options as IOptions;
     const evaluatedValue =
       this.evaluatedValue ??
-      createObjectExpression(
-        this.expression,
-        this.isGlobal ? '' : this.className,
-        {},
-        [],
-        (message) => {
+      createObjectExpression({
+        astNode: this.expression,
+        slug: this.isGlobal ? '' : this.className,
+        accumulator: {},
+        paths:
+          this.isGlobal && globalThemeContractPrefix && !mapFn
+            ? [globalThemeContractPrefix]
+            : [],
+        throwError: (message) => {
           throw this.callParams[0].buildCodeFrameError(message);
-        }
-      );
+        },
+        useValue: false,
+        mappingFn: mapFn,
+      });
     this.replacer(valueToLiteral(evaluatedValue, this.callParams[0]), false);
     this.evaluatedValue = evaluatedValue;
   }
+
   doRuntimeReplacement() {
     this.doEvaltimeReplacement();
   }

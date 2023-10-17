@@ -10,7 +10,7 @@ const processors = [
   'styleVariants',
   'createThemeContract',
   'createTheme',
-  'createGlobalThemeContract',
+  'createGlobalTheme',
   'assignVars',
   'fontFace',
   'keyframes',

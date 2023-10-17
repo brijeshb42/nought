@@ -7,8 +7,12 @@ import { SimplePseudos, simplePseudoLookup } from './simplePseudos';
 import { Primitive, Walkable, walkObject } from '../../walkObject';
 import { ExpressionValue, isSerializable } from '@linaria/utils';
 import {
+  BooleanLiteral,
   Expression,
+  Literal,
+  NumericLiteral,
   ObjectExpression,
+  StringLiteral,
   isArrayExpression,
   isIdentifier,
   isLiteral,
@@ -19,6 +23,8 @@ import {
   isTemplateLiteral,
 } from '@babel/types';
 import { parseSync } from '@babel/core';
+
+type MappingFn = (value: string | null, paths: string[]) => string;
 
 export const emotion = createInstance({
   key: 'e',
@@ -195,14 +201,79 @@ export function createThemeCss(vars: Walkable, tokens: Walkable, slug: string) {
   return emotion.cache.registered[emotionClass];
 }
 
-export function createObjectExpression<Node extends Expression>(
-  astNode: Node,
-  slug: string,
-  accumulator: Walkable,
-  paths: string[] = [],
-  throwError?: (message: string) => void,
-  useValue: boolean = false
-): Walkable {
+type SetLiteralParams = {
+  accumulator: Walkable;
+  nextKey: string;
+  value: Literal;
+  paths: string[];
+  slug: string;
+  useValue: boolean;
+  mappingFn: MappingFn | null;
+};
+
+function setLiteral({
+  accumulator,
+  nextKey,
+  value,
+  paths,
+  slug,
+  useValue,
+  mappingFn = null,
+}: SetLiteralParams) {
+  if (useValue) {
+    accumulator[nextKey] =
+      isNullLiteral(value) || isRegExpLiteral(value) || isTemplateLiteral(value)
+        ? null
+        : value.value;
+  } else {
+    const nextKeys = [...paths, nextKey];
+    const keyFromMappingFn = !mappingFn
+      ? null
+      : (() => {
+          try {
+            const val = value as
+              | StringLiteral
+              | NumericLiteral
+              | BooleanLiteral;
+            return mappingFn(
+              isNullLiteral(value) ? null : `${val.value}`,
+              nextKeys
+            );
+          } catch (ex) {
+            console.warn(
+              'mapping function passed as second argument did not return a value.',
+              (ex as Error).message
+            );
+            return null;
+          }
+        })();
+    const basePath = keyFromMappingFn ? keyFromMappingFn : nextKeys.join('-');
+    const cssVarName = cssesc(slug ? `${basePath}__${slug}` : basePath, {
+      isIdentifier: true,
+    });
+    accumulator[nextKey] = `var(--${cssVarName})`;
+  }
+}
+
+type CreateObjectExpressionParams<Node extends Expression> = {
+  astNode: Node;
+  slug?: string;
+  accumulator: Walkable;
+  paths?: string[];
+  throwError?: (message: string) => void;
+  useValue?: boolean;
+  mappingFn?: MappingFn | null;
+};
+
+export function createObjectExpression<Node extends Expression>({
+  astNode,
+  slug = '',
+  accumulator,
+  paths = [],
+  throwError,
+  useValue = false,
+  mappingFn = null,
+}: CreateObjectExpressionParams<Node>): Walkable {
   if (isObjectExpression(astNode)) {
     astNode.properties.forEach((item) => {
       if (!isObjectProperty(item)) {
@@ -218,58 +289,52 @@ export function createObjectExpression<Node extends Expression>(
         );
         return;
       }
-      if (
-        isLiteral(value) &&
-        !isTemplateLiteral(value) &&
-        !isRegExpLiteral(value)
-      ) {
-        if (useValue) {
-          accumulator[key.name] = isNullLiteral(value) ? null : value.value;
-        } else {
-          const basePath = [...paths, key.name].join('-');
-          const cssVarName = cssesc(slug ? `${basePath}__${slug}` : basePath, {
-            isIdentifier: true,
-          });
-          accumulator[key.name] = `var(--${cssVarName})`;
-        }
+      if (isLiteral(value)) {
+        setLiteral({
+          accumulator,
+          nextKey: key.name,
+          value,
+          paths,
+          slug,
+          useValue,
+          mappingFn,
+        });
       } else if (isObjectExpression(value) || isArrayExpression(value)) {
         const acc: Walkable = {};
-        accumulator[key.name] = createObjectExpression(
-          value,
+        accumulator[key.name] = createObjectExpression({
+          astNode: value,
           slug,
-          acc,
-          [...paths, key.name],
+          accumulator: acc,
+          paths: [...paths, key.name],
           throwError,
-          useValue
-        );
+          useValue,
+          mappingFn,
+        });
       }
     });
   } else if (isArrayExpression(astNode)) {
     astNode.elements.forEach((item, index) => {
-      if (
-        isLiteral(item) &&
-        !isTemplateLiteral(item) &&
-        !isRegExpLiteral(item)
-      ) {
-        if (!useValue) {
-          const basePath = [...paths, `${index}`].join('-');
-          const cssVarName = cssesc(slug ? `${basePath}__${slug}` : basePath, {
-            isIdentifier: true,
-          });
-          accumulator[index] = `var(--${cssVarName})`;
-        } else {
-          accumulator[index] = isNullLiteral(item) ? null : item.value;
-        }
+      if (isLiteral(item)) {
+        setLiteral({
+          accumulator,
+          nextKey: `${index}`,
+          value: item,
+          paths,
+          slug,
+          useValue,
+          mappingFn,
+        });
       } else if (isObjectExpression(item) || isArrayExpression(item)) {
         const acc: Walkable = {};
-        accumulator[index] = createObjectExpression(
-          item,
+        accumulator[index] = createObjectExpression({
+          astNode: item,
           slug,
-          acc,
-          [...paths, `${index}`],
+          accumulator: acc,
+          paths: [...paths, `${index}`],
           throwError,
-          useValue
-        );
+          useValue,
+          mappingFn,
+        });
       } else {
         throwError?.(
           `Found element of type: ${item?.type} in array which could not be parsed. Please provide only static values.`

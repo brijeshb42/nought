@@ -18,6 +18,16 @@ export class LayerProcessor extends BaseProcessor {
   private generateLayer() {
     let layerName = '';
     const [parentOrBase, maybeBase] = this.callParams;
+    if (this.isGlobal) {
+      if (
+        this.callParams.length === 1 &&
+        parentOrBase.kind !== ValueType.CONST
+      ) {
+        throw parentOrBase.buildCodeFrameError(
+          'The layer name passed as the 1st argument should be a static string, intead receive a variable.'
+        );
+      }
+    }
     if (parentOrBase.kind === ValueType.CONST) {
       const baseName = parentOrBase.value as string;
       const key = `${this.context.filename ?? ''}:${this.displayName}:${
@@ -103,6 +113,7 @@ export class LayerProcessor extends BaseProcessor {
   }
 
   build(values: ValueCache) {
+    console.log('BUILD', { layer: this.layerName });
     const layer = `@layer ${this.layerName} {}`;
     super.build(values, layer, `.nought_runtime_layer-${this.className}`);
   }

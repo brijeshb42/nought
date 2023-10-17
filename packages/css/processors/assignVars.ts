@@ -72,29 +72,25 @@ export class AssignVarsProcessor extends BaseProcessor {
       return;
     }
     const t = this.astService;
-    const varTokens = createObjectExpression(
-      this.expression,
-      '',
-      {},
-      [],
-      (message) => {
+    const varTokens = createObjectExpression({
+      astNode: this.expression,
+      accumulator: {},
+      throwError: (message) => {
         throw this.callParams[0].buildCodeFrameError(message);
       },
-      true
-    );
+      useValue: true,
+    });
     const actualObj = this.keys.length
       ? (get(varTokens, this.keys) as Walkable)
       : varTokens;
-    const valuesObj = createObjectExpression(
-      this.valuesExpression,
-      '',
-      {},
-      [],
-      (message) => {
+    const valuesObj = createObjectExpression({
+      astNode: this.valuesExpression,
+      accumulator: {},
+      throwError: (message) => {
         throw this.callParams[0].buildCodeFrameError(message);
       },
-      true
-    );
+      useValue: true,
+    });
     const properties: ObjectProperty[] = [];
     walkObject(actualObj, (value, path) => {
       const toSetValue = get(valuesObj, path);

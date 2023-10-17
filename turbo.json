@@ -7,7 +7,7 @@
     },
     "build:types": {
       "dependsOn": ["^build:types"],
-      "outputs": ["types/**"]
+      "outputs": ["types/**", "dist/**"]
     },
     "build:release": {
       "dependsOn": ["^build:release"],

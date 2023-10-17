@@ -6,7 +6,7 @@ import {
   validateParams,
 } from '@linaria/tags';
 import { BaseProcessor } from './utils/BaseProcessor';
-import { type createTheme } from '../vanilla-extract';
+import { createGlobalTheme, type createTheme } from '../vanilla-extract';
 import {
   createObjectExpression,
   createThemeCss,
@@ -15,7 +15,7 @@ import {
 } from './utils/style';
 import { Walkable } from '../walkObject';
 
-export class CreateThemeProcessor extends BaseProcessor {
+export class CreateGlobalThemeProcessor extends BaseProcessor {
   hasContract = false;
   expression: ObjectExpression | ArrayExpression | null = null;
   evaluatedValue: Walkable | null = null;
@@ -27,21 +27,23 @@ export class CreateThemeProcessor extends BaseProcessor {
       ['callee', 'call'],
       `Invalid invocation ot ${this.tagSource.imported}`
     );
-    this.hasContract = this.callParams.length === 2;
+    this.hasContract = this.callParams.length === 3;
     if (this.hasContract) {
       return;
     }
-    const [varsParam] = this.callParams;
+    const [, contractOrVarsParam, varsParam] = this.callParams;
     try {
-      this.expression = parseAsObjectExpression(varsParam.source);
+      this.expression = parseAsObjectExpression(
+        this.hasContract ? varsParam.source : contractOrVarsParam.source
+      );
     } catch (ex) {
       throw varsParam.buildCodeFrameError((ex as Error).message);
     }
   }
 
   doEvaltimeReplacement() {
-    if (!this.expression) {
-      super.doEvaltimeReplacement();
+    if (this.hasContract || !this.expression) {
+      this.replacer(this.astService.stringLiteral(''), false);
       return;
     }
 
@@ -49,28 +51,22 @@ export class CreateThemeProcessor extends BaseProcessor {
       this.evaluatedValue ??
       createObjectExpression({
         astNode: this.expression,
-        slug: this.className,
+        slug: '',
         accumulator: {},
+        paths: [],
         throwError: (message) => {
           throw this.callParams[0].buildCodeFrameError(message);
         },
       });
-    const t = this.astService;
-    this.replacer(
-      t.arrayExpression([
-        t.stringLiteral(this.className),
-        valueToLiteral(evaluatedValue, this.callParams[0]),
-      ]),
-      false
-    );
+    this.replacer(valueToLiteral(evaluatedValue, this.callParams[0]), false);
     this.evaluatedValue = evaluatedValue;
   }
 
   build(values: ValueCache) {
-    const [contract, tokens] =
-      this.getEvaluatedParams<Parameters<typeof createTheme>>(values);
-    const cssText = createThemeCss(contract, tokens, this.className);
-    super.build(values, cssText);
+    const [selector, contractOrVars, vars] =
+      this.getEvaluatedParams<Parameters<typeof createGlobalTheme>>(values);
+    const cssText = createThemeCss(contractOrVars, vars, '');
+    super.build(values, cssText, selector);
   }
 
   doRuntimeReplacement() {

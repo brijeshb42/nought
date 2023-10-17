@@ -4,7 +4,7 @@ import { nought } from '@nought/vite';
 export default defineConfig((env) => ({
   plugins: [
     nought({
-      displayName: true, // env.mode === 'development',
+      displayName: env.mode === 'development',
     }),
     splitVendorChunkPlugin(),
   ],

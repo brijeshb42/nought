@@ -4,16 +4,17 @@ import type {
   styleVariants as vanillaStyleVariants,
   fallbackVar as vanillaFallbackVar,
   createTheme as vanillaCreateTheme,
+  createGlobalTheme as vanillaCreateGlobalTheme,
   createThemeContract as vanillaCreateThemeContract,
   assignVars as vanillaAssignVars,
   fontFace as vanillaFontFace,
+  globalFontFace as vanillaGlobalFontFace,
   keyframes as vanillaKeyframes,
   globalKeyframes as vanillaGlobalKeyframes,
   createContainer as vanillaCreateContainer,
   layer as vanillaLayer,
   globalLayer as globalVanillaLayer,
   globalStyle as vanillaGlobalStyle,
-  createGlobalTheme as vanillaCreateGlobalTheme,
   createGlobalThemeContract as vanillaCreateGlobalThemeContract,
 } from './vanilla-extract';
 export { walkObject } from './walkObject';
@@ -54,6 +55,10 @@ export const assignVars: typeof vanillaAssignVars = () => {
 
 export const fontFace: typeof vanillaFontFace = () => {
   throw new Error(getPrefix('fontFace'));
+};
+
+export const globalFontFace: typeof vanillaGlobalFontFace = () => {
+  throw new Error(getPrefix('globalFontFace'));
 };
 
 export const keyframes: typeof vanillaKeyframes = () => {

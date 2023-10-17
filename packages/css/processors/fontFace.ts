@@ -1,19 +1,32 @@
 import { ValueCache } from '@linaria/tags';
 import { BaseProcessor } from './utils/BaseProcessor';
-import { fontFace } from '../vanilla-extract';
+import { fontFace, globalFontFace } from '../vanilla-extract';
 import { emotion } from './utils/style';
 
 export class FontFaceProcessor extends BaseProcessor {
-  isGlobal = false;
+  isGlobal = this.tagSource.imported === 'globalFontFace';
 
-  build(values: ValueCache): void {
-    const [fontFaceRule] = this.getEvaluatedParams(values) as Parameters<
-      typeof fontFace
-    >;
-    const rules = Array.isArray(fontFaceRule) ? fontFaceRule : [fontFaceRule];
+  doEvaltimeReplacement(): void {
+    if (this.isGlobal) {
+      this.replacer(this.astService.stringLiteral(''), false);
+    } else {
+      super.doEvaltimeReplacement();
+    }
+  }
+
+  doRuntimeReplacement(): void {
+    this.doEvaltimeReplacement();
+  }
+
+  buildRules(
+    values: ValueCache,
+    rule: Parameters<typeof fontFace>[0],
+    fontFamily?: string
+  ) {
+    const rules = Array.isArray(rule) ? rule : [rule];
     const fontFaces = rules.map((item) => ({
       ...item,
-      fontFamily: this.className,
+      fontFamily: fontFamily ?? this.className,
     }));
     fontFaces.forEach((item, index) => {
       const cls = emotion.css({
@@ -22,5 +35,21 @@ export class FontFaceProcessor extends BaseProcessor {
       const cssText = emotion.cache.registered[cls];
       super.build(values, cssText, `${this.className}__${index}`);
     });
+  }
+
+  build(values: ValueCache): void {
+    const params = this.getEvaluatedParams(values) as Parameters<
+      typeof fontFace | typeof globalFontFace
+    >;
+
+    if (typeof params[0] === 'string') {
+      const [globalFontFamily, globalRules] = params as Parameters<
+        typeof globalFontFace
+      >;
+      this.buildRules(values, globalRules, globalFontFamily);
+    } else {
+      const [fontFaceRule] = params as Parameters<typeof fontFace>;
+      this.buildRules(values, fontFaceRule);
+    }
   }
 }

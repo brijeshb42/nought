@@ -1,0 +1,35 @@
+{
+  "name": "@nought/ui",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch --clean false",
+    "build:types": "tsc --emitDeclarationOnly -p ."
+  },
+  "dependencies": {
+    "@nought/css": "workspace:*",
+    "clsx": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.28",
+    "react": "^18.2.0"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "module": "./dist/index.mjs",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./button": {
+      "module": "./dist/button.mjs",
+      "default": "./dist/button.js",
+      "types": "./dist/button.d.ts"
+    }
+  }
+}
