@@ -40,11 +40,9 @@ function getObjectExpression(
 }
 
 export class AssignVarsProcessor extends BaseProcessor {
-  private isGlobal = false;
   private expression: ObjectExpression | null = null;
   private valuesExpression: ObjectExpression | ArrayExpression | null = null;
   private keys: string[] = [];
-  private evaluatedValue: Walkable | null = null;
 
   constructor(params: Params, ...args: TailProcessorParams) {
     super(params, ...args);

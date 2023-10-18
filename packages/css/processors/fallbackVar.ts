@@ -53,7 +53,7 @@ export class FallbackVarProcessor extends BaseVarProcessor {
     params.forEach((param, index) => {
       if (typeof param === 'undefined') {
         throw this.callParams[index].buildCodeFrameError(
-          '@nought/runtime: fallbackVar: It only works for locally created variables and won\'t work with "colorVars" created in a different file. This is a known limitation.'
+          '@nought/runtime: fallbackVar: It only works for locally created variables and won\'t work with "createVar()" call in a different file. This is a known limitation.'
         );
       }
       items.push(param);

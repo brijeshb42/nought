@@ -113,7 +113,6 @@ export class LayerProcessor extends BaseProcessor {
   }
 
   build(values: ValueCache) {
-    console.log('BUILD', { layer: this.layerName });
     const layer = `@layer ${this.layerName} {}`;
     super.build(values, layer, `.nought_runtime_layer-${this.className}`);
   }

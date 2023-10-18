@@ -12,7 +12,7 @@ export class StyleProcessor extends BaseProcessor {
     const [firstParam] = this.callParams;
     if (firstParam.kind !== ValueType.CONST && this.isGlobal) {
       throw firstParam.buildCodeFrameError(
-        'The first parameter should be a string literal. It cannot a previously assigned variable.'
+        'The first parameter should be a string literal. It cannot be a an assigned variable.'
       );
     }
     const selector =
@@ -30,7 +30,10 @@ export class StyleProcessor extends BaseProcessor {
         values
       );
 
-    const selector = typeof params[0] === 'string' ? params[0] : this.className;
+    const selector =
+      this.isGlobal && typeof params[0] === 'string'
+        ? params[0]
+        : this.asSelector;
     const styleRule = typeof params[0] === 'string' ? params[1] : params[0];
     const cssText = processRules(styleRule as ComplexStyleRule);
 

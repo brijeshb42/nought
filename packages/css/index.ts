@@ -29,7 +29,7 @@ export const style: typeof vanillaStyle = () => {
   throw new Error(getPrefix('style'));
 };
 
-export const createVar: typeof vanillaCreateVar = (bareVar) => {
+export const createVar: typeof vanillaCreateVar = () => {
   throw new Error(getPrefix('createVar'));
 };
 

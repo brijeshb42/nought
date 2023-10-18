@@ -1,8 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import { style, createGlobalTheme, globalStyle } from '@nought/css';
 import { THEME_CONTRACT } from '@nought/ui';
-import { baseLayer, utilsLayer } from './layers';
 import { App } from './App';
+import { baseLayer, utilsLayer } from './layers';
 
 const defaultStyle = style({
   backgroundColor: THEME_CONTRACT.palette.background.default,
