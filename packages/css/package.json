@@ -1,9 +1,10 @@
 {
   "name": "@nought/css",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "types/index.d.ts",
+  "description": "Zero runtime CSS-in-JS solution",
   "scripts": {
     "build": "bun run build:release && bun run build:types",
     "build:types": "tsc --emitDeclarationOnly --outDir types -p . && cp vanilla-extract.d.ts ./types",
@@ -66,6 +67,10 @@
     "dist",
     "exports",
     "preprocessor",
-    "types"
-  ]
+    "types",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

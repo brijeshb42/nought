@@ -1,6 +1,7 @@
 {
   "name": "@nought/vite",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1",
+  "description": "Vite integration for @nought/css",
   "scripts": {
     "build": "tsup --config ../../tsup.config.js",
     "build:watch": "tsup --config ../../tsup.config.js --watch"
@@ -21,6 +22,10 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
-  ]
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
