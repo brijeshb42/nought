@@ -31,9 +31,13 @@ export default defineConfig({
 
 The overall installation and usage process will be same as other bundlers as well.
 
+### Usage
+
+Since the API and imports are same as that of `vanilla-extract`, you can follow the `vanilla-extract` [documentation](https://vanilla-extract.style/documentation/api/style/) to see how to use this package, except the imports will be from `@nought/css` instead of `vanilla-extract`. If you find that there is an API that isn't supported or something is different, please report a bug [here](https://github.com/brijeshb42/nought/issues/new).
+
 ### Things to note
 
-Mainly the items that behave differently than vanilla-extract are -
+Mainly the items that behave differently than `vanilla-extract` are -
 
 1. For `globalLayer`/`globalKeyframes` or any other global css function that accepts a string as the first argument, it should always be a static string that is passed instead of a variable (even if the value of the variable is static).
 2. The tokens object passed to `createThemeContract`/`createGlobalThemeContract` should also be fully static. They cannot reference any local variables. And the map function passed as 2nd argument to `createGlobalThemeContract` should be pure function that only uses the arguments that are passed to it and return a string based on that. It cannot even use any file level variables. This is because the context in which this function will get executed will be very different than the context of the file that has the definition of the function.
