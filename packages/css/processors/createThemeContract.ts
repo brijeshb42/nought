@@ -50,17 +50,19 @@ export class CreateThemeContractProcessor extends BaseProcessor {
 
   doEvaltimeReplacement() {
     if (!this.expression) {
-      this.replacer(this.astService.objectExpression([]), true);
+      this.replacer(this.value, true);
       return;
     }
     const [, mapFnParam] = this.callParams;
     let mapFn: (value: string | null, path: Array<string>) => string;
 
     try {
-      mapFn = this.isGlobal && mapFnParam ? eval(mapFnParam.source) : null;
+      mapFn =
+        this.isGlobal && mapFnParam?.source ? eval(mapFnParam.source) : null;
     } catch (ex) {
       throw mapFnParam.buildCodeFrameError(
-        "The mapping function should be a pure arrow function. It should only use the arguments it is passed because when it actually runs, it won't have the same context as where it was authored."
+        "The mapping function should be a pure arrow function. It should only use the arguments it is passed because when it actually runs, it won't have the same context as where it was authored. " +
+          (ex as Error).message
       );
     }
 
@@ -81,7 +83,8 @@ export class CreateThemeContractProcessor extends BaseProcessor {
         useValue: false,
         mappingFn: mapFn,
       });
-    this.replacer(valueToLiteral(evaluatedValue, this.callParams[0]), false);
+    const expression = valueToLiteral(evaluatedValue, this.callParams[0]);
+    this.replacer(expression, false);
     this.evaluatedValue = evaluatedValue;
   }
 

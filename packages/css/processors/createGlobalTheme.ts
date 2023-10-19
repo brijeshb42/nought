@@ -65,7 +65,7 @@ export class CreateGlobalThemeProcessor extends BaseProcessor {
   build(values: ValueCache) {
     const [selector, contractOrVars, vars] =
       this.getEvaluatedParams<Parameters<typeof createGlobalTheme>>(values);
-    const cssText = createThemeCss(contractOrVars, vars, '');
+    const cssText = createThemeCss(contractOrVars, vars, selector);
     super.build(values, cssText, selector);
   }
 

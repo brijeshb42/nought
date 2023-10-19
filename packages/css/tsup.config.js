@@ -21,6 +21,7 @@ const processors = [
 export default defineConfig([
   {
     ...baseConfig,
+    entry: ['index.ts', 'walkObject.ts', 'getVarName.ts'],
     dts: false,
   },
   {

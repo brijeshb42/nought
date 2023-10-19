@@ -1,4 +1,9 @@
-import { Expression, Params, TailProcessorParams } from '@linaria/tags';
+import {
+  Expression,
+  Params,
+  TailProcessorParams,
+  ValueCache,
+} from '@linaria/tags';
 import { BaseProcessor } from './utils/BaseProcessor';
 import {
   ArrayExpression,
@@ -15,6 +20,7 @@ import {
   parseExpression,
 } from './utils/style';
 import get from 'lodash.get';
+import { ValueType } from '@linaria/utils';
 
 function getObjectExpression(
   expression: Expression,
@@ -22,7 +28,7 @@ function getObjectExpression(
 ): [ObjectExpression, string[]] {
   if (!isMemberExpression(expression) && !isObjectExpression(expression)) {
     throw new Error(
-      'You can only pass objects or dotted notation to an object.'
+      'You can only pass objects or dotted notation of members of an object.'
     );
   }
   if (isObjectExpression(expression)) {
@@ -111,7 +117,7 @@ export class AssignVarsProcessor extends BaseProcessor {
     this.replacer(this.astService.objectExpression(properties), false);
   }
 
-  build() {}
+  build(values: ValueCache) {}
 
   doRuntimeReplacement(): void {
     this.doEvaltimeReplacement();

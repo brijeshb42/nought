@@ -1,6 +1,6 @@
 # Nought
 
-Nought is a zero-runtime css-in-js library. It is implemented on top of `linaria` to extract the css at build-time.
+Nought is a zero-runtime css-in-js library. It is implemented on top of `linaria` to extract the css at build-time. This is an experiment so far on exploring functionalities that are possible with Linaria.
 
 The APIs are same as that of `vanilla-extract` without the limitation that they can be used only in a `css.ts` file. In case of `Nought`, you can import the functions in any file. The style definitions can live in the same file as the components that they are used in.
 
@@ -66,7 +66,7 @@ Mainly the items that behave differently than `vanilla-extract` are -
    });
    ```
 
-   One thing to note is that the 2nd argument does not need to be static. It can use local variables for any of the values.
+   One thing to note is that the 2nd argument has to be fully static. It can use local variables for any of the values.
 
 4. There's an issue with `layer`/`globalLayer` where if you don't use those layers in a `style()` call, they won't be part of the generated CSS file.
 

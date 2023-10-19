@@ -17,12 +17,15 @@ import {
   isIdentifier,
   isLiteral,
   isNullLiteral,
+  isNumericLiteral,
   isObjectExpression,
   isObjectProperty,
   isRegExpLiteral,
+  isStringLiteral,
   isTemplateLiteral,
 } from '@babel/types';
 import { parseSync } from '@babel/core';
+import { getVarName } from '../../getVarName';
 
 type MappingFn = (value: string | null, paths: string[]) => string;
 
@@ -30,16 +33,6 @@ export const emotion = createInstance({
   key: 'e',
   stylisPlugins: [],
 });
-
-function getVarName(variable: string) {
-  const matches = variable.match(/^var\((.*)\)$/);
-
-  if (matches) {
-    return matches[1];
-  }
-
-  return variable;
-}
 
 function arrayChecker(srcObj: unknown, newObj: unknown) {
   if (Array.isArray(newObj) && Array.isArray(srcObj)) {
@@ -283,16 +276,20 @@ export function createObjectExpression<Node extends Expression>({
         return;
       }
       const { key, value } = item;
-      if (!isIdentifier(key)) {
+      if (
+        !isIdentifier(key) &&
+        !isNumericLiteral(key) &&
+        !isStringLiteral(key)
+      ) {
         throwError?.(
-          `Found ${key.type} in the vars object key which is not supported. It should be static value.`
+          `Found ${key.type} in the vars object key which is not supported. It should be static value, either number/string.`
         );
         return;
       }
       if (isLiteral(value)) {
         setLiteral({
           accumulator,
-          nextKey: key.name,
+          nextKey: isIdentifier(key) ? key.name : `${key.value}`,
           value,
           paths,
           slug,
@@ -301,11 +298,12 @@ export function createObjectExpression<Node extends Expression>({
         });
       } else if (isObjectExpression(value) || isArrayExpression(value)) {
         const acc: Walkable = {};
-        accumulator[key.name] = createObjectExpression({
+        const keyString = isIdentifier(key) ? key.name : `${key.value}`;
+        accumulator[keyString] = createObjectExpression({
           astNode: value,
           slug,
           accumulator: acc,
-          paths: [...paths, key.name],
+          paths: [...paths, keyString],
           throwError,
           useValue,
           mappingFn,

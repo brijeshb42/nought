@@ -14,13 +14,16 @@
       "outputs": ["dist/**", "esm/**", "lib/**", "types/**"]
     },
     "build:app": {
-      "dependsOn": ["^build:app"],
+      "dependsOn": ["^build:app", "build", "build:types"],
       "outputs": ["dist/**"]
     },
     "build:watch": {
-      "cache": false
+      "cache": false,
+      "dependsOn": ["build:types"]
     },
     "start": {
+      "cache": false,
+      "persistent": true,
       "dependsOn": ["^start"]
     },
     "preview": {

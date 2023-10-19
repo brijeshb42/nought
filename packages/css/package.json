@@ -40,6 +40,16 @@
       "module": "./dist/processors/preprocessor.mjs",
       "default": "./dist/processors/preprocessor.js",
       "types": "./types/processors/preprocessor.d.ts"
+    },
+    "./walkObject": {
+      "module": "./dist/walkObject.mjs",
+      "default": "./dist/walkObject.js",
+      "types": "./types/walkObject.d.ts"
+    },
+    "./getVarName": {
+      "module": "./dist/getVarName.mjs",
+      "default": "./dist/getVarName.js",
+      "types": "./types/getVarName.d.ts"
     }
   },
   "linaria": {

@@ -1,5 +1,5 @@
 import { ValueCache } from '@linaria/tags';
-import { Replacements, Rules, ValueType } from '@linaria/utils';
+import { ValueType } from '@linaria/utils';
 import { processRules } from './utils/style';
 import type { style, globalStyle, ComplexStyleRule } from '../vanilla-extract';
 import { BaseProcessor } from './utils/BaseProcessor';
@@ -12,7 +12,7 @@ export class StyleProcessor extends BaseProcessor {
     const [firstParam] = this.callParams;
     if (firstParam.kind !== ValueType.CONST && this.isGlobal) {
       throw firstParam.buildCodeFrameError(
-        'The first parameter should be a string literal. It cannot be a an assigned variable.'
+        'The first parameter should be a string literal. It cannot be an assigned variable.'
       );
     }
     const selector =
@@ -50,6 +50,10 @@ export class StyleProcessor extends BaseProcessor {
   }
 
   doRuntimeReplacement() {
-    this.doEvaltimeReplacement();
+    const classNames = Array.from(new Set(this.runtimeClasses));
+    this.replacer(
+      this.astService.stringLiteral(this.isGlobal ? '' : classNames.join(' ')),
+      false
+    );
   }
 }
