@@ -77,7 +77,9 @@ Mainly the items that behave differently than `vanilla-extract` are -
 
    // entry/main.ts
    const unusedClass = style({
-     utilsLayer: {},
+     ['@layers']: {
+       [utilsLayer]: {}
+     },
    });
    ```
 
