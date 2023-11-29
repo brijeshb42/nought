@@ -32,7 +32,7 @@ const snackbarInRight = keyframes({
   },
 });
 
-const TriggerButtonContract = createGlobalThemeContract({
+const TBVars = createGlobalThemeContract({
   borderColor: 'string',
   color: 'string',
   hoverBackground: 'string',
@@ -42,11 +42,11 @@ const TriggerButtonContract = createGlobalThemeContract({
 
 const triggerButtonStyle = style({
   vars: {
-    [TriggerButtonContract.borderColor]: theme.palette.grey[200],
-    [TriggerButtonContract.color]: theme.palette.blue[500],
-    [TriggerButtonContract.hoverBackground]: theme.palette.grey[100],
-    [TriggerButtonContract.hoverBorderColor]: theme.palette.blue[400],
-    [TriggerButtonContract.outlineColor]: theme.palette.blue[200],
+    [TBVars.borderColor]: theme.palette.grey[200],
+    [TBVars.color]: theme.palette.blue[500],
+    [TBVars.hoverBackground]: theme.palette.grey[100],
+    [TBVars.hoverBorderColor]: theme.palette.blue[400],
+    [TBVars.outlineColor]: theme.palette.blue[200],
   },
   fontFamily: 'IBM Plex Sans, sans-serif',
   fontSize: '0.875rem',
@@ -59,33 +59,33 @@ const triggerButtonStyle = style({
   cursor: 'pointer',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: TriggerButtonContract.borderColor,
-  color: TriggerButtonContract.color,
+  borderColor: TBVars.borderColor,
+  color: TBVars.color,
 
   ':hover': {
-    background: TriggerButtonContract.hoverBackground,
-    borderColor: TriggerButtonContract.hoverBorderColor,
+    background: TBVars.hoverBackground,
+    borderColor: TBVars.hoverBorderColor,
   },
 
   ':focus-visible': {
-    borderColor: TriggerButtonContract.hoverBorderColor,
-    outline: `3px solid ${TriggerButtonContract.outlineColor}`,
+    borderColor: TBVars.hoverBorderColor,
+    outline: `3px solid ${TBVars.outlineColor}`,
   },
 
   selectors: {
     ['[data-theme="dark"] &']: {
       vars: {
-        [TriggerButtonContract.borderColor]: theme.palette.grey[800],
-        [TriggerButtonContract.color]: theme.palette.blue[300],
-        [TriggerButtonContract.hoverBackground]: theme.palette.grey[900],
-        [TriggerButtonContract.hoverBorderColor]: theme.palette.blue[200],
-        [TriggerButtonContract.outlineColor]: theme.palette.blue[500],
+        [TBVars.borderColor]: theme.palette.grey[800],
+        [TBVars.color]: theme.palette.blue[300],
+        [TBVars.hoverBackground]: theme.palette.grey[900],
+        [TBVars.hoverBorderColor]: theme.palette.blue[200],
+        [TBVars.outlineColor]: theme.palette.blue[500],
       },
     },
   },
 });
 
-const SnackbarContract = createGlobalThemeContract(
+const SnackBarVars = createGlobalThemeContract(
   {
     background: 'string',
     borderColor: 'string',
@@ -96,9 +96,9 @@ const SnackbarContract = createGlobalThemeContract(
 
 const snackBarStyle = style({
   vars: {
-    [SnackbarContract.background]: theme.palette.grey[50],
-    [SnackbarContract.borderColor]: theme.palette.grey[200],
-    [SnackbarContract.color]: theme.palette.blue[700],
+    [SnackBarVars.background]: theme.palette.grey[50],
+    [SnackBarVars.borderColor]: theme.palette.grey[200],
+    [SnackBarVars.color]: theme.palette.blue[700],
   },
   position: 'fixed',
   zIndex: 5,
@@ -109,12 +109,12 @@ const snackBarStyle = style({
   justifyContent: 'start',
   maxWidth: 560,
   minWidth: 300,
-  backgroundColor: SnackbarContract.background,
+  backgroundColor: SnackBarVars.background,
   borderRadius: 8,
-  border: `1px solid ${SnackbarContract.borderColor}`,
+  border: `1px solid ${SnackBarVars.borderColor}`,
   boxShadow: '0 4px 8px rgb(0 0 0 / 0.1)',
   padding: '0.75rem',
-  color: SnackbarContract.color,
+  color: SnackBarVars.color,
   fontFamily: '"IBM Plex Sans", sans-serif',
   fontWeight: 500,
   animation: `${snackbarInRight} 200ms`,
@@ -123,9 +123,9 @@ const snackBarStyle = style({
   selectors: {
     ['[data-theme="dark"] &']: {
       vars: {
-        [SnackbarContract.background]: theme.palette.grey[900],
-        [SnackbarContract.borderColor]: theme.palette.grey[700],
-        [SnackbarContract.color]: theme.palette.blue[200],
+        [SnackBarVars.background]: theme.palette.grey[900],
+        [SnackBarVars.borderColor]: theme.palette.grey[700],
+        [SnackBarVars.color]: theme.palette.blue[200],
       },
       boxShadow: '0 4px 8px rgb(0 0 0 / 0.7)',
     },

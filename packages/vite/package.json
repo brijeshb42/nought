@@ -7,7 +7,7 @@
     "build:watch": "tsup --config ../../tsup.config.js --watch"
   },
   "dependencies": {
-    "@linaria/babel-preset": "^5.0.3",
+    "@linaria/babel-preset": "^5.0.4",
     "@linaria/logger": "^5.0.0",
     "@linaria/utils": "^5.0.2",
     "@nought/css": "0.0.1"
