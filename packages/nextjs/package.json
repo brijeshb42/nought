@@ -1,0 +1,37 @@
+{
+  "name": "@nought/nextjs",
+  "version": "0.0.1",
+  "description": "Next.js integration for @nought/css",
+  "scripts": {
+    "build": "tsup --config ./tsup.config.js",
+    "build:watch": "tsup --config ./tsup.config.js --watch"
+  },
+  "dependencies": {
+    "@linaria/babel-preset": "^5.0.4",
+    "@linaria/logger": "^5.0.0",
+    "@linaria/utils": "^5.0.2",
+    "@nought/css": "0.0.1",
+    "@rollup/pluginutils": "^5.1.0",
+    "unplugin": "^1.5.1"
+  },
+  "devDependencies": {
+    "next": "^14.0.0"
+  },
+  "peerDependencies": {
+    "next": ">=13.0.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "next-font.js",
+    "next-image.js",
+    "next-loader.js",
+    "zero-virtual.css",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

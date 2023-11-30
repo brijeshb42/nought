@@ -34,7 +34,8 @@
     "./package.json": "./package.json",
     ".": {
       "module": "./dist/index.mjs",
-      "default": "./dist/index.js"
+      "default": "./dist/index.js",
+      "types": "./types/index.d.ts"
     },
     "./preprocessor": {
       "module": "./dist/processors/preprocessor.mjs",

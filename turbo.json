@@ -26,6 +26,11 @@
       "persistent": true,
       "dependsOn": ["^start"]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
     "preview": {
       "dependsOn": ["build:app"]
     }

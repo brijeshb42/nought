@@ -36,7 +36,7 @@ import {
 import { linariaLogger } from '@linaria/logger';
 import {
   IFileReporterOptions,
-  createFileReporter,
+  createPerfMeter,
   getFileIdx,
   slugify,
   syncResolve,
@@ -69,7 +69,7 @@ export function nought({
   ...rest
 }: NoughtOptions): Plugin {
   const filter = createFilter(include, exclude);
-  const { emitter, onDone } = createFileReporter(debug ?? false);
+  const { emitter, onDone } = createPerfMeter(debug ?? false);
   const cssLookup = new Map<string, string>();
   const cssFileLookup = new Map<string, string>();
   let config: ResolvedConfig;
