@@ -250,7 +250,10 @@ export default function Home() {
           <h2>
             Docs <span>-&gt;</span>
           </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
+          <p>
+            Find in-depth information about Next.js features and API. This app
+            uses @nought/css for CSS-in-JS styling.
+          </p>
         </a>
 
         <a
